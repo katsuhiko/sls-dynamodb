@@ -36,11 +36,11 @@ curl -X POST https://XXXX.execute-api.ap-northeast-1.amazonaws.com/dev/todos --d
 ### Update
 
 ```bash
-curl -X PATCH https://1h5fk4zhch.execute-api.ap-northeast-1.amazonaws.com/dev/todos/<id> --data '{ "content" : "Understand Serverless" }'
+curl -X PATCH https://XXXX.execute-api.ap-northeast-1.amazonaws.com/dev/todos/<id> --data '{ "content" : "Understand Serverless" }'
 ```
 
 ### Delete
 
 ```bash
-curl -X DELETE https://1h5fk4zhch.execute-api.ap-northeast-1.amazonaws.com/dev/todos/<id>
+curl -X DELETE https://XXXX.execute-api.ap-northeast-1.amazonaws.com/dev/todos/<id>
 ```
