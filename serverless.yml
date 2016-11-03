@@ -1,0 +1,98 @@
+service: sls-dynamodb
+
+provider:
+  name: aws
+  runtime: nodejs4.3
+  stage: ${opt:stage, self:custom.defaultStage}
+  region: ${opt:region, self:custom.defaultRegion}
+  profile: ${self:custom.profiles.${self:provider.stage}}
+
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:DescribeTable
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource: "arn:aws:dynamodb:${self:provider.region}:*:*"
+
+custom:
+  defaultStage: dev
+  defaultRegion: ap-northeast-1
+  profiles:
+    dev: devSls
+    prod: prodSls
+  writeEnvVars:
+    STAGE: ${self:provider.stage}
+
+package:
+  exclude:
+    - .git/**
+    - README.md
+    - node_modules/serverless-plugin-write-env-vars/**
+
+plugins:
+  - serverless-plugin-write-env-vars
+
+functions:
+  todosReadAll:
+    handler: handler.todosReadAll
+    events:
+      - http:
+          path: todos
+          method: get
+          cors: true
+
+  todosReadOne:
+    handler: handler.todosReadOne
+    events:
+      - http:
+          path: todos/{id}
+          method: get
+          cors: true
+
+  todosCreate:
+    handler: handler.todosCreate
+    events:
+      - http:
+          path: todos
+          method: post
+          cors: true
+
+  todosUpdate:
+    handler: handler.todosUpdate
+    events:
+      - http:
+          path: todos/{id}
+          method: patch
+          cors: true
+
+  todosDelete:
+    handler: handler.todosDelete
+    events:
+      - http:
+          path: todos/{id}
+          method: delete
+          cors: true
+
+resources:
+  Resources:
+    TodosDynamoDbTable:
+      Type: 'AWS::DynamoDB::Table'
+      DeletionPolicy: Retain
+      Properties:
+        AttributeDefinitions:
+          -
+            AttributeName: id
+            AttributeType: S
+        KeySchema:
+          -
+            AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: "${self:provider.stage}-todos"
