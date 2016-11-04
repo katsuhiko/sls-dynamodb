@@ -40,9 +40,9 @@ module.exports.todosReadOne = (event, context, callback) => {
 };
 
 module.exports.todosCreate = (event, context, callback) => {
-  const data = JSON.parse(event.body);
+  const item = JSON.parse(event.body);
 
-  todos.create(dynamoDb, data, (err, result) => {
+  todos.create(dynamoDb, item, (err, result) => {
     if (err) {
       callback(createResponse(500, { message: err.message }));
     } else {
@@ -53,9 +53,9 @@ module.exports.todosCreate = (event, context, callback) => {
 
 module.exports.todosUpdate = (event, context, callback) => {
   const id = event.pathParameters.id,
-        data = JSON.parse(event.body);
+        item = JSON.parse(event.body);
 
-  todos.update(dynamoDb, id, data, (err, result) => {
+  todos.update(dynamoDb, id, item, (err, result) => {
     if (err) {
       callback(createResponse(500, { message: err.message }));
     } else {

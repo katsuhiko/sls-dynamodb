@@ -35,13 +35,13 @@ module.exports.readOne = (db, id, callback) => {
   });
 };
 
-module.exports.create = (db, data, callback) => {
-  data.id = uuid.v1();
-  data.updatedUtc = moment().utc().toISOString();
+module.exports.create = (db, item, callback) => {
+  item.id = uuid.v1();
+  item.updatedUtc = moment().utc().toISOString();
 
   const params = {
     TableName: tableName,
-    Item: data
+    Item: item
   };
 
   return db.put(params, (err, data) => {
@@ -53,13 +53,13 @@ module.exports.create = (db, data, callback) => {
   });
 };
 
-module.exports.update = (db, id, data, callback) => {
-  data.id = id;
-  data.updatedAt = moment().utc().toISOString();
+module.exports.update = (db, id, item, callback) => {
+  item.id = id;
+  item.updatedAt = moment().utc().toISOString();
 
   const params = {
     TableName : tableName,
-    Item: data
+    Item: item
   };
 
   return db.put(params, (err, data) => {
